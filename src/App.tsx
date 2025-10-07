@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Link, NavLink, Routes, Route, useNavigate } from 'react-router-dom';
+import Home from './pages/Home'; import Nosotros from './pages/Nosotros';
+import TyC from './pages/TyC'; import Login from './pages/Login';
+import { getUser, clearUser } from './utils/storage';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
+  const u = getUser(); const navigate = useNavigate();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <nav style={{display:'flex',gap:12,padding:12,borderBottom:'1px solid #2b2b2b',alignItems:'center'}}>
+        <Link to="/" style={{fontWeight:700}}>TikTok–UL</Link>
+        <NavLink to="/">Inicio</NavLink>
+        <NavLink to="/nosotros">Nosotros</NavLink>
+        <NavLink to="/tyc">TyC</NavLink>
+        <div style={{marginLeft:'auto',display:'flex',gap:8,alignItems:'center'}}>
+          {u ? (
+            <>
+              <span style={{border:'1px solid #3a3a3a',padding:'4px 10px',borderRadius:999}}>
+                {u.name} · {u.role} · 💰{u.coins}
+              </span>
+              <button onClick={()=>{ clearUser(); navigate('/login'); }}>Cerrar sesión</button>
+            </>
+          ) : (<NavLink to="/login">Login</NavLink>)}
+        </div>
+      </nav>
+      <main style={{padding:16}}>
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/nosotros" element={<Nosotros/>} />
+          <Route path="/tyc" element={<TyC/>} />
+          <Route path="/login" element={<Login/>} />
+        </Routes>
+      </main>
+    </div>
+  );
 }
-
-export default App
