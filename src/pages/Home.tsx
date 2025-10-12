@@ -23,7 +23,6 @@ export default function Home() {
     );
   }
 
-  // Espectador
   return (
     <section>
       <h2>👀 Feed del Espectador</h2>
