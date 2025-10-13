@@ -1,18 +1,30 @@
-import { levelForPoints, nextLevelTarget, percentToNext } from '../utils/leveling';
+interface LevelBarProps {
+  currentXP: number;
+}
 
-export default function LevelBar({ points }: { points: number }) {
-  const lvl = levelForPoints(points);
-  const target = nextLevelTarget(points);
-  const pct = percentToNext(points);
+export default function LevelBar({ currentXP }: LevelBarProps) {
+  const level = Math.floor(currentXP / 10) + 1;
+  const progress = (currentXP % 10) * 10;
 
   return (
-    <div className="level">
-      <div className="level__header">
-        <strong>Nivel {lvl}</strong>
-        <span className="level__tag">{points} / {target} pts</span>
-      </div>
-      <div className="level__bar">
-        <div className="level__barFill" style={{ width: `${pct}%` }} />
+    <div style={{ marginTop: 20 }}>
+      <p>Nivel {level}</p>
+      <div
+        style={{
+          height: 10,
+          background: "#333",
+          borderRadius: 999,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            width: `${progress}%`,
+            background: "#ff0050",
+            height: "100%",
+            transition: "width 0.3s",
+          }}
+        />
       </div>
     </div>
   );
