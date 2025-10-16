@@ -56,31 +56,33 @@
 .stream-title { font-weight:700; margin-bottom:6px; color:var(--text-primary); }
 .muted { color: var(--text-muted); }
 
-/* === CAMBIOS PARA MÓVIL === */
-@media (max-width: 768px) {
-  /* Hacemos que el clip de la semana se apile verticalmente */
-  .clip-of-week {
-    flex-direction: column;
-    text-align: center;
-  }
-  .clip-left {
-    text-align: center;
-  }
-  .clip-thumb {
-    width: 100%;
-    max-width: none; /* La imagen ocupa todo el ancho */
-  }
+/* responsive */
+@media (max-width: 900px) {
+  .clip-of-week { flex-direction:column; }
+  .clip-thumb { width:100%; max-width:none; }
+  .streams-grid { grid-template-columns: 1fr; }
+}
 
-  /* Cambiamos la grilla de streams a una sola columna */
-  .streams-grid {
-    grid-template-columns: 1fr;
-  }
+.gift-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: var(--button-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
 
-  /* Ajustamos tamaños de texto para mejor lectura */
-  .home-title {
-    font-size: 20px;
-  }
-  .clip-title {
-    font-size: 18px;
-  }
+.gift-button:hover {
+  background-color: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.stream-thumbnail-link {
+  display: block;
+  text-decoration: none;
 }

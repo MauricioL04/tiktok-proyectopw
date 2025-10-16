@@ -6,9 +6,8 @@ export default function StreamSetupPage() {
   const navigate = useNavigate();
 
   const handleStartStreaming = () => {
-    // Aquí, en un futuro, se conectaría con la lógica de streaming (RTMP, etc.)
-    alert("Simulando inicio de transmisión... ¡En vivo!");
-    // Podríamos redirigir a una página de "Live Dashboard"
+    // Redirige al nuevo panel de control en vivo
+    navigate("/stream/live");
   };
 
   return (
@@ -41,7 +40,6 @@ export default function StreamSetupPage() {
       </div>
 
       <div className="live-preview">
-        {/* Este sería el panel estilo Twitch */}
         <div className="video-placeholder">Tu video aparecerá aquí</div>
         <div className="chat-placeholder">
           <p>El chat aparecerá aquí</p>

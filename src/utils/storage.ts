@@ -1,5 +1,18 @@
 // src/utils/storage.ts
-// src/utils/storage.ts
+
+export interface LevelConfig {
+  name: string;
+  points: number;
+}
+
+export interface Gift {
+  id: string;
+  name: string;
+  icon: string;
+  cost: number;
+  points: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -11,40 +24,42 @@ export interface User {
   coins: number;
   points: number;
   likedVideos: string[];
-  streamerHours?: number; // <-- AÑADE ESTA LÍNEA
+  streamerHours?: number;
+  customGifts?: Gift[];
+  viewerLevelConfig?: LevelConfig[]; // <-- CAMBIO: Añadida la configuración de niveles
 }
-
-// ... (el resto del archivo se mantiene igual)
 
 const ACTIVE_KEY = "pw_active_user";
 const USERS_KEY = "pw_users";
 
-/** users array helpers */
+// --- Funciones de Ayuda ---
 export const getUsers = (): User[] => {
   const raw = localStorage.getItem(USERS_KEY);
   return raw ? JSON.parse(raw) as User[] : [];
 };
+
 export const saveUsers = (users: User[]) =>
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 
-/** active user helpers */
 export const getActiveUser = (): User | null => {
-  const raw = localStorage.getItem(ACTIVE_KEY);
+  const raw = localStorage.getItem(ACTIVE_KEY) || sessionStorage.getItem(ACTIVE_KEY);
   return raw ? JSON.parse(raw) as User : null;
 };
+
 export const setActiveUser = (u: User) =>
   localStorage.setItem(ACTIVE_KEY, JSON.stringify(u));
-export const clearActiveUser = () =>
-  localStorage.removeItem(ACTIVE_KEY);
 
-/** finders */
+export const clearActiveUser = () => {
+  localStorage.removeItem(ACTIVE_KEY);
+  sessionStorage.removeItem(ACTIVE_KEY);
+};
+
 export const findUserByEmail = (email: string) =>
   getUsers().find(u => u.email?.toLowerCase() === email.toLowerCase());
 
 export const findUserByUsername = (username: string) =>
   getUsers().find(u => u.username?.toLowerCase() === username.toLowerCase());
 
-/** create user (password should be plain here; we store btoa for simulation) */
 export const createUser = (u: Omit<User, "id" | "coins" | "points" | "likedVideos"> & { password: string }) => {
   const users = getUsers();
   const user = {
@@ -54,17 +69,19 @@ export const createUser = (u: Omit<User, "id" | "coins" | "points" | "likedVideo
     email: u.email,
     phone: u.phone,
     dob: u.dob,
-    password: btoa(u.password), // SIMPLE SIMULATION; do NOT use btoa in prod
+    password: btoa(u.password),
     coins: 0,
     points: 0,
-    likedVideos: []
+    likedVideos: [],
+    streamerHours: 0,
+    customGifts: [],
+    viewerLevelConfig: [], // <-- CAMBIO: Se inicializa la configuración
   } as User;
   users.push(user);
   saveUsers(users);
   return user;
 };
 
-/** verify credentials: accepts email or username plus password */
 export const verifyCredentials = (identifier: string, password: string): User | null => {
   const users = getUsers();
   const user = users.find(u =>
@@ -76,12 +93,17 @@ export const verifyCredentials = (identifier: string, password: string): User | 
   return null;
 };
 
-/** update a user object in the store */
 export const updateUser = (u: User) => {
   const users = getUsers();
   const updated = users.map(x => x.id === u.id ? u : x);
   saveUsers(updated);
-  // if active user is this id, update active slot too
+
   const active = getActiveUser();
-  if (active?.id === u.id) setActiveUser(u);
+  if (active?.id === u.id) {
+    if (localStorage.getItem(ACTIVE_KEY)) {
+      setActiveUser(u);
+    } else {
+      sessionStorage.setItem(ACTIVE_KEY, JSON.stringify(u));
+    }
+  }
 };

@@ -1,0 +1,72 @@
+/* src/pages/LiveDashboardPage.css */
+.live-dashboard-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.live-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.live-header h1 {
+  color: var(--yellow);
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.live-indicator {
+  color: var(--accent);
+  font-weight: 700;
+  animation: pulse 1.5s infinite;
+}
+
+.live-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stat-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.live-actions {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.end-stream-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1rem;
+}
