@@ -1,0 +1,40 @@
+/* src/components/RightSidebar.css */
+.right-sidebar {
+  background-color: #1b1b1b; /* --panel color */
+  border-left: 1px solid #222;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #e9e9e9;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.login-button {
+  background-color: #f1c40f; /* Color amarillo del mockup */
+  color: #1f1f1f; /* Texto oscuro para que contraste */
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+/* AJUSTA EL CUADRO DE AVISO */
+.login-prompt {
+  background-color: #3e3e3e; /* Un gris un poco más claro como en el mockup */
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.theme-toggle {
+  margin-top: auto; /* Empuja este elemento hacia abajo */
+  text-align: right;
+}
