@@ -3,103 +3,59 @@ import LevelBar from "../components/LevelBar";
 import { getActiveUser, updateUser } from "../utils/storage";
 import type { User } from "../utils/storage";
 
-interface Video {
-  id: string;
-  title: string;
-  likes: number;
-}
+interface Video { id:string; title:string; likes:number; }
 
-export default function Home() {
-  const [user, setUser] = useState<User | null>(getActiveUser());
-  const [videos, setVideos] = useState<Video[]>(() => {
-    const stored = localStorage.getItem("videos");
-    if (stored) return JSON.parse(stored);
+export default function Home(){
+  const [user,setUser] = useState<User | null>(getActiveUser());
+  const [videos,setVideos] = useState<Video[]>(() => {
+    const raw = localStorage.getItem('videos');
+    if(raw) return JSON.parse(raw);
     return [
-      { id: "v1", title: "Video de baile 🎶", likes: 0 },
-      { id: "v2", title: "Sketch cómico 😂", likes: 0 },
-      { id: "v3", title: "Video educativo 📚", likes: 0 },
+      {id:'v1', title:'Video de baile 🎶', likes:0},
+      {id:'v2', title:'Sketch cómico 😂', likes:0},
+      {id:'v3', title:'Video educativo 📚', likes:0},
     ];
   });
 
-  // 🔹 Guardar el estado de los videos si cambia
-  useEffect(() => {
-    localStorage.setItem("videos", JSON.stringify(videos));
-  }, [videos]);
+  useEffect(()=>{ localStorage.setItem('videos', JSON.stringify(videos)); },[videos]);
+  useEffect(()=>{ if(user) updateUser(user); },[user]);
 
-  // 🔹 Guardar progreso del usuario si cambia
-  useEffect(() => {
-    if (user) updateUser(user);
-  }, [user]);
+  const isLiked = (id:string)=> user?.likedVideos?.includes(id) ?? false;
 
-  const isLikedByUser = (vid: string) =>
-    user?.likedVideos?.includes(vid) ?? false;
-
-  const handleLike = (id: string) => {
-    if (!user) return alert("Primero inicia sesión.");
-    if (isLikedByUser(id)) return; // ya dio like
-
-    // 1️⃣ Actualizar contador local del video
-    setVideos((prev) =>
-      prev.map((v) => (v.id === id ? { ...v, likes: v.likes + 1 } : v))
-    );
-
-    // 2️⃣ Actualizar usuario (coins, puntos y likedVideos)
-    const updatedUser: User = {
-      ...user,
-      coins: user.coins + 1,
-      points: user.points + 1,
-      likedVideos: [...(user.likedVideos || []), id],
-    };
-
-    setUser(updatedUser);
-    window.dispatchEvent(new CustomEvent("userChanged"));
+  const handleLike = (id:string)=>{
+    if(!user) return alert('Primero inicia sesión');
+    if(isLiked(id)) return;
+    setVideos(prev=> prev.map(v=> v.id===id ? {...v, likes: v.likes+1} : v));
+    const updated:User = {...user, coins: user.coins+1, points: user.points+1, likedVideos: [...(user.likedVideos||[]), id]};
+    setUser(updated);
+    window.dispatchEvent(new CustomEvent('userChanged'));
   };
 
   return (
     <div>
-      <h2>Feed (Inicio)</h2>
-      {user ? (
-        <p>
-          Bienvenido, <strong>{user.name}</strong> 👋 — XP: {user.points}
-        </p>
-      ) : (
-        <p>Inicia sesión para interactuar con los videos 👇</p>
-      )}
+      <div className="app-topnav">
+        <div style={{fontWeight:700,color:'var(--accent)'}}>TikTok–UL</div>
+        <nav style={{display:'flex',gap:12}}>
+          <a className="muted" href="/">Inicio</a>
+          <a className="muted" href="/mensajes">Mensajes</a>
+          <a className="muted" href="/perfil">Perfil</a>
+        </nav>
+      </div>
 
-      <LevelBar currentXP={user?.points || 0} />
+      <h2 className="h1">Feed (Inicio)</h2>
+      {user ? <p>Bienvenido, <strong>{user.name}</strong> 👋 — XP: {user.points}</p> : <p className="muted">Inicia sesión para interactuar con los videos 👇</p> }
+      <div className="level-bar-wrap"><LevelBar currentXP={user?.points || 0} /></div>
 
-      <div style={{ display: "grid", gap: 16, marginTop: 20 }}>
-        {videos.map((v) => {
-          const liked = isLikedByUser(v.id);
-          return (
-            <div
-              key={v.id}
-              style={{
-                border: "1px solid #333",
-                borderRadius: 12,
-                padding: 16,
-                background: "#181818",
-              }}
-            >
-              <h3>{v.title}</h3>
-              <p>❤️ {v.likes} likes</p>
-              <button
-                onClick={() => handleLike(v.id)}
-                disabled={liked}
-                style={{
-                  background: liked ? "#333" : "#ff0050",
-                  color: "white",
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  cursor: liked ? "not-allowed" : "pointer",
-                  border: "none",
-                }}
-              >
-                {liked ? "Ya diste like" : "Dar like ❤️"}
-              </button>
+      <div>
+        {videos.map(v=>(
+          <div key={v.id} className="video-card">
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div className="video-title">{v.title}</div>
             </div>
-          );
-        })}
+            <div className="muted" style={{margin:'8px 0'}}>❤️ {v.likes} likes</div>
+            <button className="btn-like" onClick={()=>handleLike(v.id)} disabled={isLiked(v.id)}>{ isLiked(v.id) ? "Ya diste like" : "Dar like ❤️" }</button>
+          </div>
+        ))}
       </div>
     </div>
   );
