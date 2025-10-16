@@ -5,7 +5,6 @@ import {
   verifyCredentials,
   getActiveUser,
   setActiveUser,
-  clearActiveUser,
 } from "../utils/storage";
 import "./Login.css";
 
@@ -18,24 +17,30 @@ export default function Login() {
   const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
   const navigate = useNavigate();
 
+  // Redirige si ya hay una sesión activa
   useEffect(() => {
-    const active = getActiveUser();
-    if (active) navigate("/");
+    if (getActiveUser()) navigate("/");
   }, [navigate]);
 
+  // Comprueba si la cuenta está bloqueada al cargar la página
   useEffect(() => {
     const blocked = localStorage.getItem("pw_block_until");
     if (blocked) {
       const time = parseInt(blocked);
-      if (Date.now() < time) setBlockedUntil(time);
-      else localStorage.removeItem("pw_block_until");
+      if (Date.now() < time) {
+        setBlockedUntil(time);
+      } else {
+        localStorage.removeItem("pw_block_until");
+      }
     }
   }, []);
 
+  // Maneja el envío del formulario
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
+    // Verifica si la cuenta sigue bloqueada
     if (blockedUntil && Date.now() < blockedUntil) {
       const remaining = Math.ceil((blockedUntil - Date.now()) / 1000);
       setError(`Cuenta bloqueada. Intenta nuevamente en ${remaining}s`);
@@ -44,43 +49,45 @@ export default function Login() {
 
     const user = verifyCredentials(identifier.trim(), password);
 
+    // Si las credenciales son incorrectas
     if (!user) {
       const attempts = parseInt(localStorage.getItem("pw_login_attempts") || "0") + 1;
       localStorage.setItem("pw_login_attempts", attempts.toString());
 
       if (attempts >= 3) {
-        const blockTime = Date.now() + 30 * 1000;
+        const blockTime = Date.now() + 30 * 1000; // Bloquea por 30 segundos
         localStorage.setItem("pw_block_until", blockTime.toString());
         setBlockedUntil(blockTime);
         localStorage.removeItem("pw_login_attempts");
-        setError("Demasiados intentos fallidos. Bloqueado por 30s.");
+        setError("Demasiados intentos fallidos. Cuenta bloqueada por 30s.");
       } else {
-        setError(`Usuario o contraseña inválidos (${3 - attempts} intentos restantes)`);
+        setError(`Credenciales inválidas. Quedan ${3 - attempts} intentos.`);
       }
       return;
     }
 
+    // Si las credenciales son correctas, limpia los contadores de error
     localStorage.removeItem("pw_login_attempts");
     localStorage.removeItem("pw_block_until");
     setBlockedUntil(null);
 
+    // Decide dónde guardar la sesión
     if (remember) {
-      setActiveUser(user);
+      setActiveUser(user); // Guarda en localStorage (sesión persistente)
     } else {
-      sessionStorage.setItem("pw_active_user", JSON.stringify(user));
-      clearActiveUser();
+      sessionStorage.setItem("pw_active_user", JSON.stringify(user)); // Guarda en sessionStorage (sesión temporal)
     }
 
     window.dispatchEvent(new CustomEvent("userChanged"));
     navigate("/");
   };
 
-  const getRemaining = () => {
+  // Función para obtener el tiempo restante de bloqueo
+  const getRemainingBlockTime = () => {
     if (!blockedUntil) return 0;
     const remaining = Math.max(0, Math.ceil((blockedUntil - Date.now()) / 1000));
     if (remaining === 0) {
-      localStorage.removeItem("pw_block_until");
-      setBlockedUntil(null);
+      setBlockedUntil(null); // Desbloquea si el tiempo ha pasado
     }
     return remaining;
   };
@@ -95,80 +102,63 @@ export default function Login() {
           required
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
-          placeholder="usuario o correo"
-          disabled={blockedUntil !== null && Date.now() < blockedUntil}
+          placeholder="Ingrese usuario o correo"
+          disabled={!!blockedUntil}
         />
 
         <label>Contraseña</label>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <div className="password-wrapper">
           <input
             required
             type={showPass ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contraseña"
-            disabled={blockedUntil !== null && Date.now() < blockedUntil}
-            style={{
-              flex: 1,
-              paddingRight: "2.2rem", // espacio justo para el ojo
-              boxSizing: "border-box",
-            }}
+            placeholder="Ingrese contraseña"
+            disabled={!!blockedUntil}
           />
-          <span
-            onClick={() => setShowPass(!showPass)}
-            style={{
-              position: "absolute",
-              right: "0.6rem",
-              cursor: "pointer",
-              opacity: 0.8,
-              fontSize: "1.1rem",
-              userSelect: "none",
-            }}
-          >
+          <span className="password-toggle-icon" onClick={() => setShowPass(!showPass)}>
             {showPass ? "🙈" : "👁️"}
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <input
-            type="checkbox"
-            checked={remember}
-            onChange={(e) => setRemember(e.target.checked)}
-            id="rememberMe"
-          />
-          <label htmlFor="rememberMe">Recordar sesión</label>
+        <div className="form-options">
+          <label className="remember-me">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            Recordar sesión
+          </label>
+          <span 
+            className="forgot-password-link" 
+            onClick={() => navigate('/forgot-password')}
+          >
+            ¿Olvidaste tu contraseña?
+          </span>
         </div>
 
-        <button
-          type="submit"
-          disabled={blockedUntil !== null && Date.now() < blockedUntil}
-        >
+        <button type="submit" className="submit-button" disabled={!!blockedUntil}>
           Entrar
         </button>
 
-        {blockedUntil && Date.now() < blockedUntil && (
-          <div style={{ color: "orange", marginTop: 8 }}>
-            Espera {getRemaining()} segundos para volver a intentar.
+        {blockedUntil && getRemainingBlockTime() > 0 && (
+          <div className="error-message orange">
+            Espera {getRemainingBlockTime()} segundos para volver a intentar.
           </div>
         )}
+        {error && <div className="error-message">{error}</div>}
 
-        {error && <div style={{ color: "salmon", marginTop: 8 }}>{error}</div>}
-
-        <p style={{ marginTop: 12 }}>
+        <p className="register-link">
           ¿No tienes cuenta?{" "}
-          <span
-            style={{ color: "#ff0050", cursor: "pointer" }}
-            onClick={() => navigate("/register")}
-          >
+          <span onClick={() => navigate("/register")}>
             Registrarse
           </span>
         </p>
+
+        <button type="button" className="back-to-home-button" onClick={() => navigate("/")}>
+          Volver a la página principal
+        </button>
       </form>
     </div>
   );

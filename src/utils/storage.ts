@@ -1,16 +1,20 @@
 // src/utils/storage.ts
+// src/utils/storage.ts
 export interface User {
   id: string;
   name: string;
   username?: string;
   email?: string;
   phone?: string;
-  dob?: string; // ISO yyyy-mm-dd
-  password?: string; // stored as base64 (simple simulation) — in prod: hash en backend
+  dob?: string;
+  password?: string;
   coins: number;
   points: number;
   likedVideos: string[];
+  streamerHours?: number; // <-- AÑADE ESTA LÍNEA
 }
+
+// ... (el resto del archivo se mantiene igual)
 
 const ACTIVE_KEY = "pw_active_user";
 const USERS_KEY = "pw_users";
