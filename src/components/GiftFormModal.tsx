@@ -1,6 +1,5 @@
-// src/components/GiftFormModal.tsx
 import { useState, useEffect } from 'react';
-import type { Gift } from '../utils/types'; // <-- CAMBIO AQUÍ
+import type { Gift } from '../utils/types';
 import './GiftFormModal.css';
 
 interface GiftFormModalProps {

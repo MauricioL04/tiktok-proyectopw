@@ -1,4 +1,3 @@
-/* src/pages/DestacadosPage.css */
 .destacados-page {
   display: flex;
   flex-direction: column;
@@ -23,7 +22,6 @@
   margin-bottom: 1rem;
 }
 
-/* Carrusel de Streamers Destacados */
 .top-streamers-carousel {
   display: flex;
   gap: 1.5rem;
@@ -70,7 +68,6 @@
   color: var(--text-muted);
 }
 
-/* Grilla de Clips Populares */
 .clips-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

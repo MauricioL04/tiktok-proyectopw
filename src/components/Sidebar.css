@@ -1,10 +1,7 @@
-/* src/components/Sidebar.css */
-
 .sidebar {
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   transition: background-color 0.2s;
-  /* El d-flex de Bootstrap ya organiza el contenido, no necesitamos display: block */
   padding: 18px !important;
 }
 
@@ -51,14 +48,10 @@
   margin-bottom: 1.5rem !important;
 }
 
-/* === CAMBIO CLAVE AQUÍ === */
-/* Eliminamos la posición absoluta y dejamos que Flexbox (de Bootstrap) haga el trabajo.
-   La clase 'mt-auto' en Sidebar.tsx ya empuja esta sección hacia abajo. */
 .sidebar > div:last-child {
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
 }
-/* ======================== */
 
 .sidebar .small {
   color: var(--text-muted);

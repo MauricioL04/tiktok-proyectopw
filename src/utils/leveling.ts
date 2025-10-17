@@ -1,4 +1,3 @@
-// src/utils/leveling.ts
 import { getActiveUser } from './storage';
 import type { LevelConfig } from './types';
 

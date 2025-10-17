@@ -1,8 +1,6 @@
-/* src/pages/Nosotros.css */
-
 .nosotros-page {
   text-align: center;
-  padding-bottom: 40px; /* Espacio inferior */
+  padding-bottom: 40px;
 }
 
 .nosotros-title {
@@ -15,14 +13,13 @@
 .nosotros-subtitle {
   color: var(--text-muted);
   margin-bottom: 3rem;
-  max-width: 500px; /* Limita el ancho del subtítulo */
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .team-grid {
   display: grid;
-  /* Crea una grilla flexible que se adapta al tamaño de la pantalla */
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 2rem;
   justify-items: center;
@@ -38,11 +35,11 @@
 .member-photo-wrapper {
   width: 120px;
   height: 120px;
-  border-radius: 50%; /* Círculo perfecto */
+  border-radius: 50%;
   overflow: hidden;
   background-color: var(--button-bg);
   border: 3px solid var(--border-color);
-  padding: 5px; /* Espacio entre la foto y el borde */
+  padding: 5px;
   box-sizing: border-box;
 }
 

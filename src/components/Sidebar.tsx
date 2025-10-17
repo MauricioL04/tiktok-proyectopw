@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaHome, FaCompass, FaStar, FaUser, FaPlus, FaChartBar, FaUsers, FaFileContract, FaGift, FaCog } from "react-icons/fa";

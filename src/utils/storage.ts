@@ -1,4 +1,3 @@
-// src/utils/storage.ts
 import type { Gift, LevelConfig } from './types';
 
 export interface User {

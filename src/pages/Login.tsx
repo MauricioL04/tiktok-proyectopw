@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,12 +16,10 @@ export default function Login() {
   const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  // Redirige si ya hay una sesión activa
   useEffect(() => {
     if (getActiveUser()) navigate("/");
   }, [navigate]);
 
-  // Comprueba si la cuenta está bloqueada al cargar la página
   useEffect(() => {
     const blocked = localStorage.getItem("pw_block_until");
     if (blocked) {
@@ -35,12 +32,10 @@ export default function Login() {
     }
   }, []);
 
-  // Maneja el envío del formulario
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Verifica si la cuenta sigue bloqueada
     if (blockedUntil && Date.now() < blockedUntil) {
       const remaining = Math.ceil((blockedUntil - Date.now()) / 1000);
       setError(`Cuenta bloqueada. Intenta nuevamente en ${remaining}s`);
@@ -49,13 +44,12 @@ export default function Login() {
 
     const user = verifyCredentials(identifier.trim(), password);
 
-    // Si las credenciales son incorrectas
     if (!user) {
       const attempts = parseInt(localStorage.getItem("pw_login_attempts") || "0") + 1;
       localStorage.setItem("pw_login_attempts", attempts.toString());
 
       if (attempts >= 3) {
-        const blockTime = Date.now() + 30 * 1000; // Bloquea por 30 segundos
+        const blockTime = Date.now() + 30 * 1000;
         localStorage.setItem("pw_block_until", blockTime.toString());
         setBlockedUntil(blockTime);
         localStorage.removeItem("pw_login_attempts");
@@ -66,28 +60,25 @@ export default function Login() {
       return;
     }
 
-    // Si las credenciales son correctas, limpia los contadores de error
     localStorage.removeItem("pw_login_attempts");
     localStorage.removeItem("pw_block_until");
     setBlockedUntil(null);
 
-    // Decide dónde guardar la sesión
     if (remember) {
-      setActiveUser(user); // Guarda en localStorage (sesión persistente)
+      setActiveUser(user);
     } else {
-      sessionStorage.setItem("pw_active_user", JSON.stringify(user)); // Guarda en sessionStorage (sesión temporal)
+      sessionStorage.setItem("pw_active_user", JSON.stringify(user));
     }
 
     window.dispatchEvent(new CustomEvent("userChanged"));
     navigate("/");
   };
 
-  // Función para obtener el tiempo restante de bloqueo
   const getRemainingBlockTime = () => {
     if (!blockedUntil) return 0;
     const remaining = Math.max(0, Math.ceil((blockedUntil - Date.now()) / 1000));
     if (remaining === 0) {
-      setBlockedUntil(null); // Desbloquea si el tiempo ha pasado
+      setBlockedUntil(null);
     }
     return remaining;
   };

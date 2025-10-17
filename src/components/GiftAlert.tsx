@@ -1,4 +1,3 @@
-// src/components/GiftAlert.tsx
 import { useEffect } from 'react';
 import './GiftAlert.css';
 
@@ -13,10 +12,9 @@ interface GiftAlertProps {
   onClose: () => void;
 }
 
-const DURATION = 6000; // La alerta durará 6 segundos
+const DURATION = 6000;
 
 export default function GiftAlert({ info, onClose }: GiftAlertProps) {
-  // Cierra la alerta después de la duración establecida
   useEffect(() => {
     const timer = setTimeout(onClose, DURATION);
     return () => clearTimeout(timer);

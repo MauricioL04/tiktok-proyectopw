@@ -1,4 +1,3 @@
-// src/pages/ClipPage.tsx
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getActiveUser, toggleFollowStreamer } from '../utils/storage';
@@ -6,31 +5,43 @@ import { MOCK_STREAMERS } from '../utils/mockData';
 import { useNotification } from '../context/NotificationContext';
 import './ClipPage.css';
 
+const MOCK_CLIP_DATA = {
+  c1: {
+    title: 'Batalla de baile: Final en vivo',
+    streamer: '@dance_master',
+    views: 1489,
+    date: 'hace 7 días',
+    streamerProfilePic: 'https://i.pravatar.cc/50?u=dance_master',
+  }
+};
+
 export default function ClipPage() {
-  const { clipId } = useParams<{ clipId: string }>();
+  const { clipId: _clipId } = useParams<{ clipId: string }>(); 
+  const clipId = _clipId;
+
   const { showNotification } = useNotification();
   const [user, setUser] = useState(getActiveUser());
   
-  // Lógica de ejemplo para obtener los datos del clip y streamer
-  const clipData = { title: 'Batalla de baile: Final en vivo', views: 3200, date: 'hace 7 días' };
-  const streamerInfo = MOCK_STREAMERS['dance_master'];
+  const clipData = clipId ? MOCK_CLIP_DATA[clipId as keyof typeof MOCK_CLIP_DATA] : null;
+  
+  if (!clipId || !clipData) {
+    return <p>Clip no encontrado.</p>;
+  }
 
-  // --- CAMBIOS CLAVE AQUÍ ---
-  const [isFollowing, setIsFollowing] = useState(user?.following?.includes(streamerInfo.id) || false);
-  // Nuevo estado para manejar el conteo de seguidores visualmente
-  const [followerCount, setFollowerCount] = useState(streamerInfo.followers);
+  const streamerId = 'dance_master';
+  const streamer = MOCK_STREAMERS[streamerId as keyof typeof MOCK_STREAMERS];
+
+  const [isFollowing, setIsFollowing] = useState(user?.following?.includes(streamer.id) || false);
 
   useEffect(() => {
     const handleUserChange = () => {
       const updatedUser = getActiveUser();
       setUser(updatedUser);
-      // Actualiza el estado de "seguir" basado en los datos más recientes del usuario
-      const nowFollowing = updatedUser?.following?.includes(streamerInfo.id) || false;
-      setIsFollowing(nowFollowing);
+      setIsFollowing(updatedUser?.following?.includes(streamer.id) || false);
     };
     window.addEventListener("userChanged", handleUserChange);
     return () => window.removeEventListener("userChanged", handleUserChange);
-  }, [streamerInfo.id]);
+  }, [streamer.id]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -42,15 +53,7 @@ export default function ClipPage() {
       showNotification('Debes iniciar sesión para seguir a un streamer.');
       return;
     }
-    // Llama a la función que actualiza la lista de seguidos en localStorage
-    toggleFollowStreamer(streamerInfo.id);
-
-    // Actualiza el contador de seguidores visualmente en la pantalla
-    if (isFollowing) {
-      setFollowerCount(prev => prev - 1); // Si ya lo seguía, resta 1
-    } else {
-      setFollowerCount(prev => prev + 1); // Si no lo seguía, suma 1
-    }
+    toggleFollowStreamer(streamer.id);
   };
 
   return (
@@ -69,11 +72,10 @@ export default function ClipPage() {
           </div>
           <p className="clip-meta">{clipData.views.toLocaleString()} visualizaciones • {clipData.date}</p>
           <div className="streamer-info-bar">
-            <img src={streamerInfo.profilePic} alt="Avatar del streamer" />
+            <img src={streamer.profilePic} alt="Avatar del streamer" />
             <div className="streamer-details">
-              <strong>{streamerInfo.name}</strong>
-              {/* Ahora muestra el contador de seguidores del estado local */}
-              <small>{followerCount.toLocaleString()} seguidores</small>
+              <strong>{streamer.name}</strong>
+              <small>{streamer.followers.toLocaleString()} seguidores</small>
             </div>
             <button onClick={handleFollow} className={isFollowing ? 'following-button' : 'follow-button-clip'}>
               {isFollowing ? '✅ Seguido' : 'Seguir'}

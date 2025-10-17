@@ -1,4 +1,3 @@
-// src/utils/types.ts
 export interface Gift {
   id: string;
   name: string;

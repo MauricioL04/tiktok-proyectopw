@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
@@ -19,7 +18,7 @@ import LiveDashboardPage from "./pages/LiveDashboardPage";
 import ExplorarPage from "./pages/ExplorarPage";
 import CategoryPage from "./pages/CategoryPage";
 import DestacadosPage from "./pages/DestacadosPage";
-import ClipPage from "./pages/ClipPage"; // <-- Importa la nueva página
+import ClipPage from "./pages/ClipPage";
 import { FaBars } from "react-icons/fa";
 import "./App.css";
 
@@ -52,7 +51,7 @@ function MainLayout() {
           <Route path="/stream/setup" element={<StreamSetupPage />} />
           <Route path="/stream/live" element={<LiveDashboardPage />} />
           <Route path="/stream/:streamId" element={<StreamPage />} />
-          <Route path="/clip/:clipId" element={<ClipPage />} /> {/* <-- Añade la nueva ruta */}
+          <Route path="/clip/:clipId" element={<ClipPage />} />
           <Route path="/dashboard/gifts" element={<GiftManagementPage />} />
           <Route path="/dashboard/community" element={<CommunitySettingsPage />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />

@@ -1,7 +1,6 @@
-// src/pages/GiftManagementPage.tsx
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
-import type { Gift } from '../utils/types'; // <-- CAMBIO AQUÍ
+import type { Gift } from '../utils/types';
 import GiftFormModal from '../components/GiftFormModal';
 import './GiftManagementPage.css';
 
@@ -17,10 +16,8 @@ export default function GiftManagementPage() {
     let updatedGifts;
 
     if (existingGifts.find(g => g.id === gift.id)) {
-      // Editar
       updatedGifts = existingGifts.map(g => g.id === gift.id ? gift : g);
     } else {
-      // Añadir
       updatedGifts = [...existingGifts, gift];
     }
 

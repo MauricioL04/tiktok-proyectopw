@@ -1,13 +1,9 @@
-// src/pages/TyC.tsx
 import { useNavigate } from 'react-router-dom';
-import './TyC.css'; // Importamos los estilos
+import './TyC.css';
 
 export default function TyC() {
-  // El hook 'useNavigate' nos da una función para controlar la navegación
   const navigate = useNavigate();
 
-  // === CAMBIO AQUÍ ===
-  // Esta función ahora nos llevará siempre a la página principal ("/")
   const handleGoBack = () => {
     navigate('/');
   };
@@ -44,7 +40,6 @@ export default function TyC() {
           No está permitido publicar contenido que sea ilegal, difamatorio, obsceno o que infrinja los derechos de propiedad intelectual de terceros. Nos reservamos el derecho de eliminar cualquier contenido y suspender cuentas que violen estas políticas sin previo aviso.
         </p>
         
-        {/* Aquí podrías añadir más secciones */}
       </div>
 
       <div className="tyc-footer">

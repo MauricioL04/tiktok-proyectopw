@@ -1,4 +1,3 @@
-/* src/pages/Home/Home.css */
 .home-page { color: var(--text-primary); }
 
 .home-top { margin-bottom: 18px; display:flex; flex-direction:column; gap:4px; }

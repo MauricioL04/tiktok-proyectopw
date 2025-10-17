@@ -1,10 +1,8 @@
-// src/components/DepositModal.tsx
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
 import type { User } from '../utils/storage';
 import './DepositModal.css';
 
-// --- Paquetes de Monedas ---
 const coinPackages = [
   { coins: 100, price: 5.00 },
   { coins: 550, price: 25.00 },
@@ -60,7 +58,7 @@ export default function DepositModal({ onClose }: DepositModalProps) {
         ) : isCompleted ? (
           <div className="feedback-state">
             <p className="success-message">¡Felicidades!</p>
-            {/* === CAMBIO AQUÍ: Se quitó el ícono de moneda === */}
+            {}
             <p>Has recargado <strong>{purchasedAmount.toLocaleString()}</strong> monedas a tu cuenta.</p>
             <button onClick={handleClose} className="buy-button">Entendido</button>
           </div>
@@ -68,7 +66,7 @@ export default function DepositModal({ onClose }: DepositModalProps) {
           <div className="packages-grid">
             {coinPackages.map((pkg) => (
               <div key={pkg.coins} className="package-card">
-                {/* === CAMBIO AQUÍ: Se quitó el ícono de moneda === */}
+                {}
                 <div className="package-coins">{pkg.coins.toLocaleString()}</div>
                 <div className="package-price">S/ {pkg.price.toFixed(2)}</div>
                 <button 

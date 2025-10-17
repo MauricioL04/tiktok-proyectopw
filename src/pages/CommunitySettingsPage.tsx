@@ -1,8 +1,7 @@
-// src/pages/CommunitySettingsPage.tsx
 import { useState, useEffect } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
-import type { LevelConfig } from '../utils/storage';
-import { DEFAULT_VIEWER_LEVELS } from '../utils/leveling'; // Importaremos los niveles por defecto
+import type { LevelConfig } from '../utils/types';
+import { DEFAULT_VIEWER_LEVELS } from '../utils/leveling';
 import './CommunitySettingsPage.css';
 
 export default function CommunitySettingsPage() {
@@ -12,27 +11,24 @@ export default function CommunitySettingsPage() {
 
   useEffect(() => {
     if (user) {
-      // Si el usuario tiene una configuración personalizada, la usamos. Si no, usamos la por defecto.
       setLevels(user.viewerLevelConfig && user.viewerLevelConfig.length > 0 ? user.viewerLevelConfig : DEFAULT_VIEWER_LEVELS);
     }
   }, [user]);
 
   const handlePointsChange = (index: number, points: number) => {
     const updatedLevels = [...levels];
-    updatedLevels[index].points = points;
+    const minPoints = index > 0 ? updatedLevels[index - 1].points + 1 : 0;
+    updatedLevels[index].points = Math.max(minPoints, points);
     setLevels(updatedLevels);
   };
 
   const handleSaveChanges = () => {
     if (!user) return;
-
-    // Guardamos la configuración personalizada en el perfil del usuario
     const updatedUser = { ...user, viewerLevelConfig: levels };
     updateUser(updatedUser);
-    setUser(updatedUser); // Actualiza el estado local para reflejar los cambios
-
+    setUser(updatedUser);
     setFeedback('¡Cambios guardados con éxito!');
-    setTimeout(() => setFeedback(''), 2000); // Oculta el mensaje después de 2 segundos
+    setTimeout(() => setFeedback(''), 2000);
   };
 
   if (!user) return <p>Inicia sesión para acceder a esta página.</p>;
@@ -56,8 +52,8 @@ export default function CommunitySettingsPage() {
               value={level.points}
               onChange={(e) => handlePointsChange(index, parseInt(e.target.value) || 0)}
               className="points-input"
-              // El primer nivel siempre es 0 puntos y no se puede editar
               disabled={index === 0}
+              min={index > 0 ? (levels[index-1]?.points ?? 0) + 1 : 0}
             />
             <span>puntos</span>
           </div>

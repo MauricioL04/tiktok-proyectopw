@@ -1,7 +1,6 @@
-// src/context/NotificationContext.tsx
 import { createContext, useState, useContext } from 'react';
 import type { ReactNode } from 'react';
-import Notification from '../components/Notification'; // Crearemos este componente a continuación
+import Notification from '../components/Notification';
 
 interface NotificationContextType {
   showNotification: (message: string) => void;

@@ -1,4 +1,3 @@
-// src/pages/LiveDashboardPage.tsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getActiveUser, updateUser } from '../utils/storage';
@@ -6,7 +5,6 @@ import { getStreamerLevelInfo } from '../utils/leveling';
 import { useNotification } from '../context/NotificationContext';
 import './LiveDashboardPage.css';
 
-// Función para formatear el tiempo del cronómetro
 const formatTime = (seconds: number) => {
   const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
   const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
@@ -18,9 +16,23 @@ export default function LiveDashboardPage() {
   const navigate = useNavigate();
   const { showNotification } = useNotification();
   const [user, setUser] = useState(getActiveUser());
-  const [elapsedTime, setElapsedTime] = useState(0); // Tiempo en segundos
+  const [elapsedTime, setElapsedTime] = useState(0);
 
-  // Cronómetro
+  useEffect(() => {
+    const handleUserChange = () => {
+      const currentUser = getActiveUser();
+      setUser(currentUser);
+      if (!currentUser) {
+        navigate('/login');
+      }
+    };
+    window.addEventListener("userChanged", handleUserChange);
+    if (!user) {
+        navigate('/login');
+    }
+    return () => window.removeEventListener("userChanged", handleUserChange);
+  }, [navigate, user]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setElapsedTime(prev => prev + 1);
@@ -31,28 +43,27 @@ export default function LiveDashboardPage() {
   const handleEndStream = () => {
     if (!user) return;
 
-    // Calcula la duración en horas
     const durationInHours = elapsedTime / 3600;
-
     const oldLevelInfo = getStreamerLevelInfo(user.streamerHours || 0);
     const newTotalHours = (user.streamerHours || 0) + durationInHours;
     const newLevelInfo = getStreamerLevelInfo(newTotalHours);
 
-    // Notificación de subida de nivel
     if (newLevelInfo.levelName !== oldLevelInfo.levelName) {
       showNotification(`¡Felicidades! Has subido a nivel de streamer ${newLevelInfo.levelName}.`);
     }
 
-    // Actualiza al usuario y guarda los datos
     const updatedUser = { ...user, streamerHours: newTotalHours };
     updateUser(updatedUser);
     window.dispatchEvent(new CustomEvent("userChanged"));
-
-    // Redirige al dashboard de estadísticas
     navigate("/estadisticas");
   };
 
-  if (!user) return <p>Acceso denegado.</p>;
+  if (!user) {
+    return <p>Cargando...</p>;
+  }
+
+  const streamerHours = user.streamerHours || 0;
+  const levelInfo = getStreamerLevelInfo(streamerHours);
 
   return (
     <div className="live-dashboard-page">
@@ -68,12 +79,26 @@ export default function LiveDashboardPage() {
         </div>
         <div className="stat-card">
           <h4>Espectadores</h4>
-          <p>{Math.floor(Math.random() * 100) + 5}</p> {/* Simulado */}
+          <p>{Math.floor(Math.random() * 100) + 5}</p>
         </div>
         <div className="stat-card">
           <h4>Nuevos seguidores</h4>
-          <p>{Math.floor(Math.random() * 5)}</p> {/* Simulado */}
+          <p>{Math.floor(Math.random() * 5)}</p>
         </div>
+      </div>
+
+      <div className="card">
+        <h3>Progreso de Nivel de Streamer</h3>
+        <div className="progress-bar-container">
+          <div className="progress-bar-fill" style={{ width: `${levelInfo.progress}%` }}></div>
+        </div>
+        <p className="motivation-text">
+          Nivel actual: <strong>{levelInfo.levelName}</strong>.
+          {levelInfo.hoursToNext > 0
+            ? ` Faltan ${levelInfo.hoursToNext.toFixed(2)} horas para el siguiente nivel.`
+            : " ¡Has alcanzado el nivel máximo!"
+          }
+        </p>
       </div>
 
       <div className="live-actions">

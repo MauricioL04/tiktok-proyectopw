@@ -1,6 +1,3 @@
-/* src/App.css */
-
-/* (Tus variables de :root y estilos globales se mantienen igual...) */
 :root {
   --bg-main: #1e1e1e;
   --bg-sidebar: #121212;
@@ -32,7 +29,6 @@ html,body,#root {
   transition: background 0.2s, color 0.2s;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
 .app-grid-container {
   display: grid;
   grid-template-columns: 250px 1fr 280px;
@@ -51,7 +47,6 @@ html,body,#root {
   position: relative;
 }
 
-/* === ESTILOS MEJORADOS Y MÁS ESPECÍFICOS PARA EL BOTÓN === */
 .sidebar-toggle-button {
   position: fixed;
   top: 20px;
@@ -74,15 +69,12 @@ html,body,#root {
   background-color: var(--accent);
 }
 
-/* === REGLA NUEVA Y CLAVE === */
-/* Le da tamaño y color explícitamente al ícono SVG */
 .sidebar-toggle-button svg {
-  font-size: 18px; /* Tamaño del ícono */
-  color: white; /* Color del ícono */
+  font-size: 18px;
+  color: white;
 }
 
 
-/* (Tu código responsive se mantiene igual...) */
 @media (max-width: 1200px) {
   .app-grid-container {
     grid-template-columns: 250px 1fr;

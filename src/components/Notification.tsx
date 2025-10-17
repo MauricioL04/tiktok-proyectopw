@@ -1,4 +1,3 @@
-// src/components/Notification.tsx
 import { useState, useEffect } from 'react';
 import './Notification.css';
 
@@ -7,18 +6,16 @@ interface NotificationProps {
   onClose: () => void;
 }
 
-const DURATION = 5000; // 5 segundos
+const DURATION = 5000;
 
 export default function Notification({ message, onClose }: NotificationProps) {
   const [progress, setProgress] = useState(0);
 
-  // Efecto para cerrar la notificación después de 5 segundos
   useEffect(() => {
     const timer = setTimeout(onClose, DURATION);
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  // Efecto para animar la barra de progreso
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => prev + (100 / (DURATION / 50)));

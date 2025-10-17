@@ -1,15 +1,11 @@
-// src/pages/CategoryPage.tsx
 import { useParams, Link } from 'react-router-dom';
-import './CategoryPage.css'; // Crearemos los estilos para esta página
+import './CategoryPage.css';
 
-// --- Datos de Ejemplo Ampliados ---
-// En un proyecto real, estos datos vendrían de una API
 const MOCK_DATA = {
   categories: {
     'Gaming': { img: 'https://picsum.photos/seed/cat1/300/400', viewers: '1.2M', followers: '69.8M', tags: ['Shooter', 'Aventura', 'Acción'] },
     'IRL': { img: 'https://picsum.photos/seed/cat2/300/400', viewers: '890k', followers: '12.1M', tags: ['Charlando', 'Viajes', 'Eventos'] },
     'Música': { img: 'https://picsum.photos/seed/cat3/300/400', viewers: '450k', followers: '25.3M', tags: ['DJ', 'Producción', 'Concierto'] },
-    // Añade más categorías si es necesario
   },
   live_streams: [
     { id: 's6', title: 'Creando un personaje 3D', streamer: '@arteDigital', category: 'Arte', viewers: 530, profilePic: 'https://i.pravatar.cc/40?u=arte' },
@@ -29,7 +25,6 @@ export default function CategoryPage() {
 
   const categoryInfo = MOCK_DATA.categories[categoryName as keyof typeof MOCK_DATA.categories];
   
-  // Filtra los streams que pertenecen a esta categoría
   const filteredStreams = MOCK_DATA.live_streams.filter(
     stream => stream.category.toLowerCase() === categoryName.toLowerCase()
   );
@@ -40,7 +35,6 @@ export default function CategoryPage() {
 
   return (
     <div className="category-page">
-      {/* Header de la Categoría */}
       <header className="category-page-header">
         <img src={categoryInfo.img} alt={categoryName} className="category-logo" />
         <div className="category-header-info">
@@ -56,14 +50,12 @@ export default function CategoryPage() {
         </div>
       </header>
 
-      {/* Tabs de Navegación */}
       <nav className="category-tabs">
         <span className="tab-item active">Canales en directo</span>
         <span className="tab-item">Videos</span>
         <span className="tab-item">Clips</span>
       </nav>
 
-      {/* Grilla de Streams en Vivo */}
       <div className="stream-grid">
         {filteredStreams.length > 0 ? (
           filteredStreams.map(stream => (

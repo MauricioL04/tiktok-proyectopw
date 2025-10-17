@@ -1,4 +1,3 @@
-// src/context/AlertContext.tsx
 import { createContext, useState, useContext } from 'react';
 import type { ReactNode } from 'react';
 import GiftAlert from '../components/GiftAlert';

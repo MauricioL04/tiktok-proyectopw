@@ -1,4 +1,3 @@
-// src/pages/StreamSetupPage.tsx
 import { useNavigate } from 'react-router-dom';
 import './StreamSetupPage.css';
 
@@ -6,7 +5,6 @@ export default function StreamSetupPage() {
   const navigate = useNavigate();
 
   const handleStartStreaming = () => {
-    // Redirige al nuevo panel de control en vivo
     navigate("/stream/live");
   };
 

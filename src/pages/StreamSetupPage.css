@@ -1,8 +1,7 @@
-/* src/pages/StreamSetupPage.css */
 .stream-setup-page {
   display: flex;
   gap: 2rem;
-  height: calc(100vh - 56px); /* Ajusta según la altura de tu header si es necesario */
+  height: calc(100vh - 56px);
 }
 
 .setup-panel {

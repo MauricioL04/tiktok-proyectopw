@@ -1,14 +1,12 @@
-// src/pages/LevelsPage.tsx
 import { useNavigate } from 'react-router-dom';
 import { getActiveUser } from '../utils/storage';
 import { getLevelInfo } from '../utils/leveling';
-import './LevelsPage.css'; // Crearemos este archivo para los estilos
+import './LevelsPage.css';
 
 export default function LevelsPage() {
   const navigate = useNavigate();
   const user = getActiveUser();
 
-  // Si no hay usuario, muestra un mensaje y un botón para volver
   if (!user) {
     return (
       <div className="levels-page">
@@ -19,7 +17,6 @@ export default function LevelsPage() {
     );
   }
 
-  // Obtenemos la información del nivel usando nuestra nueva función
   const levelInfo = getLevelInfo(user.points);
 
   return (

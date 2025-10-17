@@ -1,9 +1,8 @@
-// src/components/GiftModal.tsx
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
 import { useAlert } from '../context/AlertContext';
-import { useNotification } from '../context/NotificationContext'; // Importa el hook de notificación
-import { getLevelInfo } from '../utils/leveling'; // Importa la lógica de nivel
+import { useNotification } from '../context/NotificationContext';
+import { getLevelInfo } from '../utils/leveling';
 import './GiftModal.css';
 
 const GIFT_LIST = [
@@ -21,7 +20,7 @@ export default function GiftModal({ onClose }: GiftModalProps) {
   const [feedback, setFeedback] = useState('');
   const user = getActiveUser();
   const { showAlert } = useAlert();
-  const { showNotification } = useNotification(); // Obtiene la función de notificación
+  const { showNotification } = useNotification();
 
   const handleSendGift = (gift: typeof GIFT_LIST[0]) => {
     setFeedback('');
@@ -34,7 +33,7 @@ export default function GiftModal({ onClose }: GiftModalProps) {
       return;
     }
 
-    const oldLevelName = getLevelInfo(user.points).currentLevelName; // Guarda el nivel antiguo
+    const oldLevelName = getLevelInfo(user.points).currentLevelName;
 
     const updatedUser = {
       ...user,
@@ -43,9 +42,8 @@ export default function GiftModal({ onClose }: GiftModalProps) {
     };
     updateUser(updatedUser);
     
-    const newLevelName = getLevelInfo(updatedUser.points).currentLevelName; // Obtiene el nivel nuevo
+    const newLevelName = getLevelInfo(updatedUser.points).currentLevelName;
 
-    // Compara y muestra la notificación si subió de nivel
     if (oldLevelName !== newLevelName) {
       showNotification(`¡Nuevo nivel alcanzado! Felicitaciones, ${user.name}. Ahora eres ${newLevelName}.`);
     }

@@ -1,5 +1,3 @@
-/* src/components/DepositModal.css */
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -15,7 +13,6 @@
 }
 
 .modal-content {
-  /* === CAMBIO CLAVE: Añadido el color de fondo === */
   background-color: var(--bg-sidebar);
   color: var(--text-primary);
   padding: 24px;
@@ -58,7 +55,6 @@
 }
 
 .package-card {
-  /* === CAMBIO CLAVE: Añadido el color de fondo para las tarjetas === */
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   border-radius: 12px;

@@ -1,4 +1,3 @@
-// src/components/RightSidebar.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getActiveUser, clearActiveUser } from '../utils/storage';

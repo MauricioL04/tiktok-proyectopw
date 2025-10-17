@@ -1,4 +1,3 @@
-// src/components/Chat.tsx
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
 import { getLevelInfo } from '../utils/leveling';
@@ -12,7 +11,6 @@ interface Message {
   text: string;
 }
 
-// --- Datos para simular espectadores aleatorios ---
 const RANDOM_USERS = [
   { name: 'NinjaFan', level: 'Leyenda' },
   { name: 'GamerX', level: 'Guerrero' },
@@ -53,7 +51,6 @@ export default function Chat() {
 
     window.dispatchEvent(new CustomEvent("userChanged"));
 
-    // --- Simulación de respuesta de otro espectador ---
     setTimeout(() => {
       const randomUser = RANDOM_USERS[Math.floor(Math.random() * RANDOM_USERS.length)];
       const randomMessageText = RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)];
@@ -64,7 +61,7 @@ export default function Chat() {
         text: randomMessageText,
       };
       setMessages(prev => [...prev, spectatorMessage]);
-    }, 1500); // Responde después de 1.5 segundos
+    }, 1500);
   };
 
   return (

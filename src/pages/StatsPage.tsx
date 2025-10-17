@@ -1,16 +1,13 @@
-// src/pages/StatsPage.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getActiveUser } from '../utils/storage';
-import { getStreamerLevelInfo } from '../utils/leveling'; // <-- Importación corregida
+import { getStreamerLevelInfo } from '../utils/leveling';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import './StatsPage.css';
 
-// Registra los componentes necesarios de Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-// --- Datos de Ejemplo para el Gráfico ---
 const mockData = {
   day: {
     labels: ['Hace 6h', 'Hace 5h', 'Hace 4h', 'Hace 3h', 'Hace 2h', 'Hace 1h', 'Ahora'],

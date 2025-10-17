@@ -1,4 +1,3 @@
-// src/utils/mockData.ts
 export const MOCK_STREAMERS = {
   'dance_master': { id: 'dance_master', name: '@dance_master', followers: 125345, profilePic: 'https://i.pravatar.cc/50?u=dance_master' },
   'proGamer': { id: 'proGamer', name: '@proGamer', followers: 892100, profilePic: 'https://i.pravatar.cc/50?u=gamer' },

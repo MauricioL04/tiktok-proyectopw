@@ -1,4 +1,3 @@
-// src/utils/validators.ts
 export const passwordMeetsRules = (pwd: string) => {
   const length = pwd.length >= 8;
   const upper = /[A-Z]/.test(pwd);
@@ -7,11 +6,9 @@ export const passwordMeetsRules = (pwd: string) => {
   return { ok: length && upper && lower && number, length, upper, lower, number };
 };
 
-// === CAMBIO AQUÍ: El límite ahora es de 3 a 20 caracteres ===
 export const usernameAllowed = (u: string) => {
   return /^[a-zA-Z0-9_]{3,20}$/.test(u);
 };
-// =======================================================
 
 export const isNameValid = (name: string): boolean => {
   const nameRegex = /^[a-zA-Z\u00C0-\u017F\s]+$/;

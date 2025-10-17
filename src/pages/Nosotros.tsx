@@ -1,7 +1,5 @@
-// src/pages/Nosotros.tsx
-import './Nosotros.css'; // Importamos el nuevo archivo de estilos
+import './Nosotros.css';
 
-// --- Datos del Equipo ---
 const teamMembers = [
   { name: 'Mauricio Linares', role: 'Líder del equipo' },
   { name: 'Leonardo Sotelo', role: 'Desarrollador' },
@@ -10,7 +8,6 @@ const teamMembers = [
   { name: 'Diego Salazar', role: 'Desarrollador' }
 ];
 
-// Usaremos un ícono estándar para todos
 const userIconUrl = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
 export default function Nosotros() {

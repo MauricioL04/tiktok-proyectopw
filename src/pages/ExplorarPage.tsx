@@ -1,8 +1,6 @@
-// src/pages/ExplorarPage.tsx
 import { Link } from 'react-router-dom';
 import './ExplorarPage.css';
 
-// --- Datos Ampliados ---
 const CATEGORIES = [
   { name: 'Gaming', viewers: '1.2M', img: 'https://picsum.photos/seed/cat1/400/500' },
   { name: 'IRL', viewers: '890k', img: 'https://picsum.photos/seed/cat2/400/500' },
