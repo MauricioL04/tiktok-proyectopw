@@ -1,8 +1,7 @@
 // src/utils/leveling.ts
 import { getActiveUser } from './storage';
-import type { LevelConfig } from './storage';
+import type { LevelConfig } from './types';
 
-// Exportamos los niveles por defecto para que otras partes de la app puedan usarlos
 export const DEFAULT_VIEWER_LEVELS: LevelConfig[] = [
   { name: 'Novato', points: 0 },
   { name: 'Guerrero', points: 100 },
@@ -13,14 +12,12 @@ export const DEFAULT_VIEWER_LEVELS: LevelConfig[] = [
 
 const STREAMER_LEVELS = [
   { name: 'Bronce', hours: 0 },
-  { name: 'Plata', hours: 10 },
-  { name: 'Oro', hours: 50 },
-  { name: 'Diamante', hours: 200 },
+  { name: 'Plata', hours: 1 / 60 },
+  { name: 'Oro', hours: 5 / 60 },
+  { name: 'Diamante', hours: 10 / 60 },
+  { name: 'Maestro', hours: 60 / 60 },
 ];
 
-/**
- * Determina qué configuración de niveles usar: la personalizada del streamer o la por defecto.
- */
 function getEffectiveViewerLevels(): LevelConfig[] {
   const user = getActiveUser();
   if (user?.viewerLevelConfig && user.viewerLevelConfig.length > 0) {
@@ -30,7 +27,7 @@ function getEffectiveViewerLevels(): LevelConfig[] {
 }
 
 export function getLevelInfo(userPoints: number) {
-  const viewerLevels = getEffectiveViewerLevels(); // Usa la configuración correcta
+  const viewerLevels = getEffectiveViewerLevels();
   let currentLevelIndex = 0;
   for (let i = viewerLevels.length - 1; i >= 0; i--) {
     if (userPoints >= viewerLevels[i].points) {
@@ -78,11 +75,7 @@ export function getStreamerLevelInfo(streamerHours: number) {
   const nextLevel = STREAMER_LEVELS[currentLevelIndex + 1];
 
   if (!nextLevel) {
-    return {
-      levelName: currentLevel.name,
-      hoursToNext: 0,
-      progress: 100,
-    };
+    return { levelName: currentLevel.name, hoursToNext: 0, progress: 100 };
   }
 
   const hoursInThisLevel = streamerHours - currentLevel.hours;

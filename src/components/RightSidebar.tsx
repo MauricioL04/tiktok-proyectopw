@@ -1,12 +1,13 @@
 // src/components/RightSidebar.tsx
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getActiveUser, clearActiveUser } from "../utils/storage";
-import type { User } from "../utils/storage";
-import { useTheme } from "../context/ThemeContext";
-import DepositModal from "./DepositModal";
-import { getLevelInfo } from "../utils/leveling";
-import "./RightSidebar.css";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getActiveUser, clearActiveUser } from '../utils/storage';
+import type { User } from '../utils/storage';
+import { MOCK_STREAMERS } from '../utils/mockData';
+import { useTheme } from '../context/ThemeContext';
+import DepositModal from './DepositModal';
+import { getLevelInfo } from '../utils/leveling';
+import './RightSidebar.css';
 
 export default function RightSidebar() {
   const [user, setUser] = useState<User | null>(getActiveUser());
@@ -54,14 +55,30 @@ export default function RightSidebar() {
             </div>
             <div className="action-buttons">
               <button className="action-btn"><span>💬</span> Mensajes</button>
-              <button onClick={() => setDepositModalOpen(true)} className="action-btn deposit-btn">
-                <span>💰</span> Deposita
-              </button>
+              <button onClick={() => setDepositModalOpen(true)} className="action-btn deposit-btn"><span>💰</span> Deposita</button>
             </div>
             <button className="vip-button">Club VIP</button>
+            
             <div className="preferred-channels">
-              <p>Aquí va el listado de canales preferidos del usuario</p>
+              <h4>Tus streamers favoritos</h4>
+              <div className="followed-list">
+                {(user.following && user.following.length > 0) ? (
+                  user.following.map(streamerId => {
+                    const streamer = MOCK_STREAMERS[streamerId as keyof typeof MOCK_STREAMERS];
+                    if (!streamer) return null;
+                    return (
+                      <div key={streamer.id} className="followed-item">
+                        <img src={streamer.profilePic} alt={streamer.name} />
+                        <span>{streamer.name}</span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="no-followed-message">Sigue a tus streamers favoritos para verlos aquí.</p>
+                )}
+              </div>
             </div>
+
             <div className="sidebar-footer">
               <button className="help-button">🆘 Centro de ayuda</button>
               <button onClick={handleLogout} className="logout-button">Cerrar sesión</button>
@@ -74,9 +91,7 @@ export default function RightSidebar() {
           <div className="guest-view">
             <div className="user-info">
               <span>{guestName}</span>
-              <button onClick={() => navigate("/login")} className="login-button">
-                Iniciar sesión
-              </button>
+              <button onClick={() => navigate("/login")} className="login-button">Iniciar sesión</button>
             </div>
             <div className="login-prompt">
               <p>Porfavor, inicie sesión para utilizar todas las funciones disponibles.</p>

@@ -18,13 +18,17 @@ import CommunitySettingsPage from "./pages/CommunitySettingsPage";
 import LiveDashboardPage from "./pages/LiveDashboardPage";
 import ExplorarPage from "./pages/ExplorarPage";
 import CategoryPage from "./pages/CategoryPage";
-import DestacadosPage from "./pages/DestacadosPage"; // <-- Importa la nueva página
+import DestacadosPage from "./pages/DestacadosPage";
+import ClipPage from "./pages/ClipPage"; // <-- Importa la nueva página
 import { FaBars } from "react-icons/fa";
 import "./App.css";
 
 function MainLayout() {
   const [isRightSidebarVisible, setRightSidebarVisible] = useState(true);
-  const toggleRightSidebar = () => { setRightSidebarVisible(!isRightSidebarVisible); };
+
+  const toggleRightSidebar = () => {
+    setRightSidebarVisible(!isRightSidebarVisible);
+  };
 
   return (
     <div className={`app-grid-container ${isRightSidebarVisible ? '' : 'collapsed'}`}>
@@ -40,7 +44,7 @@ function MainLayout() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/explorar" element={<ExplorarPage />} />
-          <Route path="/destacados" element={<DestacadosPage />} /> {/* <-- Añade la nueva ruta */}
+          <Route path="/destacados" element={<DestacadosPage />} />
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/tyc" element={<TyC />} />
           <Route path="/levels" element={<LevelsPage />} />
@@ -48,6 +52,7 @@ function MainLayout() {
           <Route path="/stream/setup" element={<StreamSetupPage />} />
           <Route path="/stream/live" element={<LiveDashboardPage />} />
           <Route path="/stream/:streamId" element={<StreamPage />} />
+          <Route path="/clip/:clipId" element={<ClipPage />} /> {/* <-- Añade la nueva ruta */}
           <Route path="/dashboard/gifts" element={<GiftManagementPage />} />
           <Route path="/dashboard/community" element={<CommunitySettingsPage />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />

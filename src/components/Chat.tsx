@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
 import { getLevelInfo } from '../utils/leveling';
-import { useNotification } from '../context/NotificationContext'; // 1. Importa el hook
+import { useNotification } from '../context/NotificationContext';
 import './Chat.css';
 
 interface Message {
@@ -12,14 +12,22 @@ interface Message {
   text: string;
 }
 
+// --- Datos para simular espectadores aleatorios ---
+const RANDOM_USERS = [
+  { name: 'NinjaFan', level: 'Leyenda' },
+  { name: 'GamerX', level: 'Guerrero' },
+  { name: 'ArtLover', level: 'Héroe' },
+  { name: 'MusicMan', level: 'Novato' },
+];
+const RANDOM_MESSAGES = ['¡Qué buena jugada!', 'jajaja, muy bueno', '¡Saludos desde Perú!', 'Me encanta este stream', 'F'];
+
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, user: 'Admin', level: 'Dios', text: '¡Bienvenidos al stream!' },
-    { id: 2, user: 'Espectador1', level: 'Guerrero', text: '¡Hola a todos!' }
   ]);
   const [newMessage, setNewMessage] = useState('');
   const user = getActiveUser();
-  const { showNotification } = useNotification(); // 2. Obtiene la función para mostrar notificaciones
+  const { showNotification } = useNotification();
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +39,6 @@ export default function Chat() {
     const newLevelName = getLevelInfo(updatedUser.points).currentLevelName;
 
     if (oldLevelName !== newLevelName) {
-      // 3. Llama a la nueva notificación en lugar del alert
       showNotification(`¡Nuevo nivel alcanzado! Felicitaciones, ${user.name}. Ahora eres ${newLevelName}.`);
     }
 
@@ -45,6 +52,19 @@ export default function Chat() {
     setNewMessage('');
 
     window.dispatchEvent(new CustomEvent("userChanged"));
+
+    // --- Simulación de respuesta de otro espectador ---
+    setTimeout(() => {
+      const randomUser = RANDOM_USERS[Math.floor(Math.random() * RANDOM_USERS.length)];
+      const randomMessageText = RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)];
+      const spectatorMessage: Message = {
+        id: Date.now() + 1,
+        user: randomUser.name,
+        level: randomUser.level,
+        text: randomMessageText,
+      };
+      setMessages(prev => [...prev, spectatorMessage]);
+    }, 1500); // Responde después de 1.5 segundos
   };
 
   return (

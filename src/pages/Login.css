@@ -1,5 +1,4 @@
 /* src/pages/Login.css */
-
 .login-container {
   display: flex;
   justify-content: center;
@@ -45,6 +44,22 @@
   opacity: 0.5;
 }
 
+.input-with-validation {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-with-validation input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+.validation-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 1.2rem;
+}
+
 .password-wrapper {
   position: relative;
   display: flex;
@@ -59,7 +74,7 @@
   position: absolute;
   right: 12px;
   cursor: pointer;
-  user-select: none; /* Evita que el texto se seleccione */
+  user-select: none;
   font-size: 1.2rem;
 }
 
@@ -135,4 +150,29 @@
   background: var(--button-bg) !important;
   color: var(--text-muted) !important;
   border: 1px solid var(--border-color) !important;
+}
+
+/* === CAMBIO AQUÍ: Añadido flex-wrap para que las sugerencias se ajusten === */
+.suggestions-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: -4px;
+  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea */
+}
+
+.suggestion-chip {
+  background: var(--button-bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-primary);
+}
+
+.suggestion-chip:hover {
+  background-color: var(--accent);
+  color: white;
 }

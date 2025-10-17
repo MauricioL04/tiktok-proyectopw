@@ -4,6 +4,8 @@
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   transition: background-color 0.2s;
+  /* El d-flex de Bootstrap ya organiza el contenido, no necesitamos display: block */
+  padding: 18px !important;
 }
 
 .sidebar-search {
@@ -29,6 +31,7 @@
   transition: all 0.2s ease;
   font-size: 15px;
   font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .sidebar-link:hover {
@@ -42,10 +45,24 @@
   font-weight: 700;
 }
 
-.sidebar h5, .sidebar .small {
-    color: var(--text-primary);
+.sidebar h5 {
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.5rem !important;
 }
 
-.sidebar .text-secondary {
-    color: var(--text-muted) !important;
+/* === CAMBIO CLAVE AQUÍ === */
+/* Eliminamos la posición absoluta y dejamos que Flexbox (de Bootstrap) haga el trabajo.
+   La clase 'mt-auto' en Sidebar.tsx ya empuja esta sección hacia abajo. */
+.sidebar > div:last-child {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+/* ======================== */
+
+.sidebar .small {
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 1rem;
 }

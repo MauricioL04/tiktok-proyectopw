@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
 import { useAlert } from '../context/AlertContext';
+import { useNotification } from '../context/NotificationContext'; // Importa el hook de notificación
+import { getLevelInfo } from '../utils/leveling'; // Importa la lógica de nivel
 import './GiftModal.css';
 
 const GIFT_LIST = [
@@ -19,6 +21,7 @@ export default function GiftModal({ onClose }: GiftModalProps) {
   const [feedback, setFeedback] = useState('');
   const user = getActiveUser();
   const { showAlert } = useAlert();
+  const { showNotification } = useNotification(); // Obtiene la función de notificación
 
   const handleSendGift = (gift: typeof GIFT_LIST[0]) => {
     setFeedback('');
@@ -31,20 +34,24 @@ export default function GiftModal({ onClose }: GiftModalProps) {
       return;
     }
 
+    const oldLevelName = getLevelInfo(user.points).currentLevelName; // Guarda el nivel antiguo
+
     const updatedUser = {
       ...user,
       coins: user.coins - gift.cost,
       points: user.points + gift.points,
     };
     updateUser(updatedUser);
+    
+    const newLevelName = getLevelInfo(updatedUser.points).currentLevelName; // Obtiene el nivel nuevo
+
+    // Compara y muestra la notificación si subió de nivel
+    if (oldLevelName !== newLevelName) {
+      showNotification(`¡Nuevo nivel alcanzado! Felicitaciones, ${user.name}. Ahora eres ${newLevelName}.`);
+    }
+
     window.dispatchEvent(new CustomEvent("userChanged"));
-
-    showAlert({
-      userName: user.name,
-      giftName: gift.name,
-      giftIcon: gift.icon,
-    });
-
+    showAlert({ userName: user.name, giftName: gift.name, giftIcon: gift.icon });
     setFeedback(`¡Enviaste un/a ${gift.name}!`);
     setTimeout(onClose, 1500);
   };
@@ -77,7 +84,6 @@ export default function GiftModal({ onClose }: GiftModalProps) {
             );
           })}
         </div>
-
         {feedback && <div className="feedback-message">{feedback}</div>}
       </div>
     </div>

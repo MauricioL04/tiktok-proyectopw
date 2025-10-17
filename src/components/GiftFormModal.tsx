@@ -1,6 +1,6 @@
 // src/components/GiftFormModal.tsx
 import { useState, useEffect } from 'react';
-import type { Gift } from '../utils/storage';
+import type { Gift } from '../utils/types'; // <-- CAMBIO AQUÍ
 import './GiftFormModal.css';
 
 interface GiftFormModalProps {
@@ -21,6 +21,11 @@ export default function GiftFormModal({ gift, onSave, onClose }: GiftFormModalPr
       setIcon(gift.icon);
       setCost(gift.cost);
       setPoints(gift.points);
+    } else {
+      setName('');
+      setIcon('');
+      setCost(0);
+      setPoints(0);
     }
   }, [gift]);
 

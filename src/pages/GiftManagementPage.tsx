@@ -1,7 +1,7 @@
 // src/pages/GiftManagementPage.tsx
 import { useState } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
-import type { Gift } from '../utils/storage';
+import type { Gift } from '../utils/types'; // <-- CAMBIO AQUÍ
 import GiftFormModal from '../components/GiftFormModal';
 import './GiftManagementPage.css';
 
