@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar d-flex flex-column p-3 vh-100">
-      <h5 className="text-center mb-4">🎬 Streaming–UL</h5>
+      <h5 className="text-center mb-4">Streaming–UL</h5>
       
       <input type="text" placeholder="🔍 Buscar" className="sidebar-search form-control mb-3" />
 
