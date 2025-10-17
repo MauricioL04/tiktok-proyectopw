@@ -16,23 +16,22 @@ import StreamPage from "./pages/StreamPage";
 import GiftManagementPage from "./pages/GiftManagementPage";
 import CommunitySettingsPage from "./pages/CommunitySettingsPage";
 import LiveDashboardPage from "./pages/LiveDashboardPage";
+import ExplorarPage from "./pages/ExplorarPage";
+import CategoryPage from "./pages/CategoryPage";
+import DestacadosPage from "./pages/DestacadosPage"; // <-- Importa la nueva página
 import { FaBars } from "react-icons/fa";
 import "./App.css";
 
-// Layout principal que se usa en la mayoría de las páginas
 function MainLayout() {
   const [isRightSidebarVisible, setRightSidebarVisible] = useState(true);
-
-  const toggleRightSidebar = () => {
-    setRightSidebarVisible(!isRightSidebarVisible);
-  };
+  const toggleRightSidebar = () => { setRightSidebarVisible(!isRightSidebarVisible); };
 
   return (
     <div className={`app-grid-container ${isRightSidebarVisible ? '' : 'collapsed'}`}>
       <Sidebar />
       <main className="page-content">
-        <button
-          onClick={toggleRightSidebar}
+        <button 
+          onClick={toggleRightSidebar} 
           className="sidebar-toggle-button"
           style={{ right: isRightSidebarVisible ? '300px' : '20px' }}
         >
@@ -40,6 +39,8 @@ function MainLayout() {
         </button>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/explorar" element={<ExplorarPage />} />
+          <Route path="/destacados" element={<DestacadosPage />} /> {/* <-- Añade la nueva ruta */}
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/tyc" element={<TyC />} />
           <Route path="/levels" element={<LevelsPage />} />
@@ -49,6 +50,7 @@ function MainLayout() {
           <Route path="/stream/:streamId" element={<StreamPage />} />
           <Route path="/dashboard/gifts" element={<GiftManagementPage />} />
           <Route path="/dashboard/community" element={<CommunitySettingsPage />} />
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
         </Routes>
       </main>
       {isRightSidebarVisible && <RightSidebar />}
@@ -56,16 +58,12 @@ function MainLayout() {
   );
 }
 
-// Componente principal que gestiona qué layout mostrar
 export default function App() {
   return (
     <Routes>
-      {/* Rutas que NO usan el layout principal */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-
-      {/* Todas las demás rutas usarán el MainLayout */}
       <Route path="/*" element={<MainLayout />} />
     </Routes>
   );
