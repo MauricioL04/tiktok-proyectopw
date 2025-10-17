@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { getActiveUser, updateUser } from '../utils/storage';
 import { getStreamerLevelInfo } from '../utils/leveling';
 import { useNotification } from '../context/NotificationContext';
+import Chat from '../components/Chat';
+import GiftModal from '../components/GiftModal';
 import './LiveDashboardPage.css';
 
 const formatTime = (seconds: number) => {
@@ -17,19 +19,16 @@ export default function LiveDashboardPage() {
   const { showNotification } = useNotification();
   const [user, setUser] = useState(getActiveUser());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [isGiftModalOpen, setGiftModalOpen] = useState(false);
 
   useEffect(() => {
     const handleUserChange = () => {
       const currentUser = getActiveUser();
       setUser(currentUser);
-      if (!currentUser) {
-        navigate('/login');
-      }
+      if (!currentUser) { navigate('/login'); }
     };
     window.addEventListener("userChanged", handleUserChange);
-    if (!user) {
-        navigate('/login');
-    }
+    if (!user) { navigate('/login'); }
     return () => window.removeEventListener("userChanged", handleUserChange);
   }, [navigate, user]);
 
@@ -42,7 +41,6 @@ export default function LiveDashboardPage() {
 
   const handleEndStream = () => {
     if (!user) return;
-
     const durationInHours = elapsedTime / 3600;
     const oldLevelInfo = getStreamerLevelInfo(user.streamerHours || 0);
     const newTotalHours = (user.streamerHours || 0) + durationInHours;
@@ -58,55 +56,44 @@ export default function LiveDashboardPage() {
     navigate("/estadisticas");
   };
 
-  if (!user) {
-    return <p>Cargando...</p>;
-  }
+  if (!user) { return <p>Cargando...</p>; }
 
   const streamerHours = user.streamerHours || 0;
   const levelInfo = getStreamerLevelInfo(streamerHours);
 
   return (
-    <div className="live-dashboard-page">
-      <div className="live-header">
-        <h1>Panel de Control en Vivo</h1>
-        <div className="live-indicator">● EN VIVO</div>
-      </div>
-
-      <div className="live-stats">
-        <div className="stat-card">
-          <h4>Duración</h4>
-          <p>{formatTime(elapsedTime)}</p>
+    <>
+      <div className="live-dashboard-layout">
+        <div className="live-main-content">
+          <div className="live-video-player">
+            <p>Simulación de Video EN VIVO</p>
+          </div>
+          <div className="live-controls-info">
+            <div className="live-indicator-timer">
+              <span className="live-indicator">● EN VIVO</span>
+              <span>{formatTime(elapsedTime)}</span>
+            </div>
+            <div className="streamer-level-info">
+              Nivel Streamer: <strong>{levelInfo.levelName}</strong> ({levelInfo.progress}% para el sig.)
+            </div>
+            <button onClick={() => setGiftModalOpen(true)} className="view-gifts-button">
+              🎁 Ver Regalos
+            </button>
+            <button onClick={handleEndStream} className="end-stream-button">
+              Detener Transmisión
+            </button>
+          </div>
         </div>
-        <div className="stat-card">
-          <h4>Espectadores</h4>
-          <p>{Math.floor(Math.random() * 100) + 5}</p>
-        </div>
-        <div className="stat-card">
-          <h4>Nuevos seguidores</h4>
-          <p>{Math.floor(Math.random() * 5)}</p>
+        <div className="live-chat-panel">
+          <Chat />
         </div>
       </div>
-
-      <div className="card">
-        <h3>Progreso de Nivel de Streamer</h3>
-        <div className="progress-bar-container">
-          <div className="progress-bar-fill" style={{ width: `${levelInfo.progress}%` }}></div>
-        </div>
-        <p className="motivation-text">
-          Nivel actual: <strong>{levelInfo.levelName}</strong>.
-          {levelInfo.hoursToNext > 0
-            ? ` Faltan ${levelInfo.hoursToNext.toFixed(2)} horas para el siguiente nivel.`
-            : " ¡Has alcanzado el nivel máximo!"
-          }
-        </p>
-      </div>
-
-      <div className="live-actions">
-        <p>Tu transmisión está en curso. Cuando termines, detén la transmisión para guardar tu progreso.</p>
-        <button onClick={handleEndStream} className="end-stream-button">
-          Detener Transmisión y Guardar
-        </button>
-      </div>
-    </div>
+      {isGiftModalOpen && (
+        <GiftModal
+          onClose={() => setGiftModalOpen(false)}
+          isStreamerSelfView={true}
+        />
+      )}
+    </>
   );
 }

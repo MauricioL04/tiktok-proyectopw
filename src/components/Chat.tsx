@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getActiveUser, updateUser } from '../utils/storage';
-import { getLevelInfo } from '../utils/leveling';
+import { getLevelInfo, DEFAULT_VIEWER_LEVELS } from '../utils/leveling';
 import { useNotification } from '../context/NotificationContext';
 import './Chat.css';
 
@@ -11,21 +11,45 @@ interface Message {
   text: string;
 }
 
-const RANDOM_USERS = [
-  { name: 'NinjaFan', level: 'Leyenda' },
-  { name: 'GamerX', level: 'Guerrero' },
-  { name: 'ArtLover', level: 'Héroe' },
-  { name: 'MusicMan', level: 'Novato' },
-];
-const RANDOM_MESSAGES = ['¡Qué buena jugada!', 'jajaja, muy bueno', '¡Saludos desde Perú!', 'Me encanta este stream', 'F'];
+const RANDOM_USERS_GENERIC = ['NinjaFan', 'GamerX', 'ArtLover', 'MusicMan', 'StreamFan123', 'RandomUser'];
+const RANDOM_MESSAGES = ['¡Qué buena jugada!', 'jajaja, muy bueno', '¡Saludos desde Perú!', 'Me encanta este stream', 'F', 'Pog', 'Nice!', '¿Alguien sabe la canción?'];
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, user: 'Admin', level: 'Dios', text: '¡Bienvenidos al stream!' },
+    { id: Date.now(), user: 'Admin', level: 'Dios', text: '¡Bienvenidos al stream!' },
   ]);
   const [newMessage, setNewMessage] = useState('');
   const user = getActiveUser();
   const { showNotification } = useNotification();
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const effectiveLevels = user?.viewerLevelConfig && user.viewerLevelConfig.length > 0
+        ? user.viewerLevelConfig
+        : DEFAULT_VIEWER_LEVELS;
+
+      const randomUserName = RANDOM_USERS_GENERIC[Math.floor(Math.random() * RANDOM_USERS_GENERIC.length)];
+      const randomLevel = effectiveLevels[Math.floor(Math.random() * effectiveLevels.length)].name;
+      const randomMessageText = RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)];
+
+      const spectatorMessage: Message = {
+        id: Date.now(),
+        user: randomUserName,
+        level: randomLevel,
+        text: randomMessageText,
+      };
+      setMessages(prev => [...prev, spectatorMessage]);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [user]);
+
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +61,7 @@ export default function Chat() {
     const newLevelName = getLevelInfo(updatedUser.points).currentLevelName;
 
     if (oldLevelName !== newLevelName) {
-      showNotification(`¡Nuevo nivel alcanzado! Felicitaciones, ${user.name}. Ahora eres ${newLevelName}.`);
+      showNotification(`🎉 ¡Felicidades, ${user.name}! 🎉\n\nHas subido al nivel de espectador: ${newLevelName}`);
     }
 
     const message: Message = {
@@ -48,25 +72,12 @@ export default function Chat() {
     };
     setMessages(prev => [...prev, message]);
     setNewMessage('');
-
     window.dispatchEvent(new CustomEvent("userChanged"));
-
-    setTimeout(() => {
-      const randomUser = RANDOM_USERS[Math.floor(Math.random() * RANDOM_USERS.length)];
-      const randomMessageText = RANDOM_MESSAGES[Math.floor(Math.random() * RANDOM_MESSAGES.length)];
-      const spectatorMessage: Message = {
-        id: Date.now() + 1,
-        user: randomUser.name,
-        level: randomUser.level,
-        text: randomMessageText,
-      };
-      setMessages(prev => [...prev, spectatorMessage]);
-    }, 1500);
   };
 
   return (
     <div className="chat-container">
-      <div className="chat-messages">
+      <div className="chat-messages" ref={chatMessagesRef}>
         {messages.map(msg => (
           <div key={msg.id} className="chat-message">
             <span className="user-level-badge">{msg.level}</span>
@@ -75,10 +86,10 @@ export default function Chat() {
           </div>
         ))}
       </div>
-      
+
       {user ? (
         <form onSubmit={handleSendMessage} className="chat-form">
-          <input 
+          <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}

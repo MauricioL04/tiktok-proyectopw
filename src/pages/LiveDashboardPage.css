@@ -1,71 +1,91 @@
-.live-dashboard-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding-bottom: 40px;
+.live-dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  height: calc(100vh - 56px);
+  max-height: calc(100vh - 56px);
 }
 
-.live-header {
+.live-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.live-video-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+}
+
+.live-controls-info {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
-.live-header h1 {
-  color: var(--yellow);
-  margin: 0;
-  font-size: 1.8rem;
+.live-indicator-timer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .live-indicator {
   color: var(--accent);
-  font-weight: 700;
   animation: pulse 1.5s infinite;
 }
 
-.live-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
+.streamer-level-info {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  flex-grow: 1;
   text-align: center;
 }
-
-.stat-card h4 {
-  margin: 0 0 0.5rem 0;
-  color: var(--text-muted);
-  font-size: 1rem;
-}
-
-.stat-card p {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: 800;
+.streamer-level-info strong {
   color: var(--text-primary);
 }
 
-.live-actions {
-  background-color: var(--card-bg);
+.view-gifts-button,
+.end-stream-button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.view-gifts-button {
+  background-color: var(--button-bg);
+  color: var(--text-primary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
 }
 
 .end-stream-button {
   background-color: #dc3545;
   color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 1rem;
+}
+
+.live-chat-panel {
+  height: 100%;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
